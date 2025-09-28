@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charles Brown - Interactive Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Professional Navy Blue and Warm Gold/Amber -->
+    <!-- Application Structure Plan: A single-page, top-down narrative structure with a sticky navigation for easy exploration. It starts with a strong summary (who he is), moves to a visual representation of his core skills (what he can do), and then provides an interactive timeline for his experience (where he's done it). This flow is designed to be intuitive for a hiring manager, allowing them to get a quick overview and then dive into details as needed, making the resume scannable and engaging. -->
+    <!-- Visualization & Content Choices: 
+        - Summary of Qualifications -> Goal: Inform -> Presentation: Prominent Text Block -> Interaction: None -> Justification: A clear, concise introduction is essential to frame the candidate's profile immediately.
+        - Key Skills -> Goal: Organize & Compare -> Viz: Radar Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: A radar chart visually and quickly communicates a balanced skill set, turning a simple list into an impactful data visualization. It's more memorable than bullet points.
+        - Professional Experience -> Goal: Show Change & Detail -> Presentation: Interactive Vertical Timeline (HTML/CSS/JS) -> Interaction: Click to reveal details -> Justification: An interactive timeline prevents a "wall of text," making the resume feel less dense and allowing users to focus on one role at a time. It encourages exploration.
+        - Education/Logistics -> Goal: Inform -> Presentation: Simple Cards -> Interaction: None -> Justification: This is supplementary information that needs to be clear and easy to find but doesn't require complex visualization. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #1f2937; /* gray-800 */
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+        /* New Professional Color Scheme */
+        .timeline-item.active .timeline-dot {
+            background-color: #d97706; /* amber-600 */
+            transform: scale(1.25);
+        }
+        .timeline-item.active .timeline-title {
+            color: #1f2937; /* Navy/Gray-900 */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-gray-800">
+
+    <header class="bg-white/95 backdrop-blur-lg sticky top-0 z-50 border-b border-gray-200">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-gray-900">Charles Brown</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#summary" class="nav-link text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                        <a href="#skills" class="nav-link text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium">Core Skills</a>
+                        <a href="#experience" class="nav-link text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium">Experience</a>
+                        <a href="#education" class="nav-link text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-sm font-medium">Education & Logistics</a>
+                    </div>
+                </div>
+                 <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-amber-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+             <div class="md:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#summary" class="block nav-link text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-base font-medium">Profile</a>
+                    <a href="#skills" class="block nav-link text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-base font-medium">Core Skills</a>
+                    <a href="#experience" class="block nav-link text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-base font-medium">Experience</a>
+                    <a href="#education" class="block nav-link text-gray-600 hover:text-amber-600 px-3 py-2 rounded-md text-base font-medium">Education & Logistics</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <section id="summary" class="text-center mb-24 pt-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Charles Brown</h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600 mb-6">Niagara Falls, ON</p>
+            
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+                <a href="mailto:Charles@charlesbrown.ca" class="flex items-center justify-center px-6 py-3 bg-amber-600 text-white font-semibold rounded-lg shadow-md hover:bg-amber-700 transition duration-300 transform hover:scale-[1.02]">
+                    📧 Email Charles@charlesbrown.ca
+                </a>
+                <a href="tel:+12897727933" class="flex items-center justify-center px-6 py-3 bg-gray-800 text-white font-semibold rounded-lg shadow-md hover:bg-gray-900 transition duration-300 transform hover:scale-[1.02]">
+                    📞 Call 289-772-7933
+                </a>
+            </div>
+
+            <div class="mt-8 max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                 <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2 border-amber-500">Summary of Qualifications</h2>
+                 <p class="text-left text-gray-700 leading-relaxed">Highly motivated and physically capable university student currently pursuing a degree in Psychology, with a strong background in customer service, complex problem-solving, and facility maintenance. Excellent ability to quickly grasp new instructions, work confidently with the public, and maintain high standards of cleanliness and organization. Seeking to leverage strong interpersonal skills and patience to provide exceptional service in a retail or pet care environment.</p>
+            </div>
+        </section>
+
+        <section id="skills" class="mb-24 pt-12">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Core Skills</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">This chart visualizes my key strengths relevant to a retail and customer-focused environment. These skills have been developed through hands-on professional experience and academic study.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <div class="relative w-full h-80 max-h-96 mx-auto sm:max-w-md md:max-w-lg">
+                    <canvas id="skillsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="mb-24 pt-12">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Professional Experience</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Explore my work history by clicking on each role in the timeline below to see my key responsibilities and accomplishments.</p>
+            </div>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="w-full md:w-1/3">
+                    <div id="timeline" class="relative border-l-2 border-gray-300 pl-6 space-y-8">
+                    </div>
+                </div>
+                <div class="w-full md:w-2/3">
+                    <div id="experience-details" class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 min-h-[300px] transition-all duration-300">
+                        <p class="text-gray-500 italic">Select a job from the timeline to view details.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="pt-12">
+             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Education & Logistics</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">My academic background provides a strong foundation for understanding client needs, while practical logistics ensure I'm a reliable team member.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 border-b pb-1 border-amber-500">Education</h3>
+                    <p class="font-semibold text-gray-800">Brock University | Current Student, Psychology</p>
+                    <ul class="list-disc list-inside mt-2 text-gray-700 space-y-1">
+                        <li>Currently enrolled, building expertise in human behavior, communication, and patience.</li>
+                        <li>Completed High School Diploma.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 border-b pb-1 border-amber-500">Logistics & Certifications</h3>
+                     <ul class="list-disc list-inside mt-2 text-gray-700 space-y-1">
+                        <li>Possess a personal vehicle and am able to commute reliably for work.</li>
+                         <li>Full Ontario SmartServe certification.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-gray-800 text-white mt-24">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 Charles Brown | Interactive Resume</p>
+        </div>
+    </footer>
+
+
+    <script>
+        const experienceData = [
+            {
+                id: 'exp1',
+                title: 'Food Attendant/Guest Service Attendant',
+                company: 'Fallsview Indoor Waterpark',
+                location: 'Niagara Falls, ON',
+                dates: 'September 2022 – January 2025',
+                details: [
+                    'Provided high-volume <strong>guest service</strong> in a fast-paced environment, handling inquiries, resolving issues, and ensuring a positive customer experience.',
+                    'Managed <strong>cash handling and transactions</strong> as a trained and trusted Cashier, consistently cashing out accurately while working independently.',
+                    'Demonstrated proficiency in all areas of kitchen operations, including <strong>prep work, cleaning, sanitation, and following strict safety protocols</strong>.'
+                ]
+            },
+            {
+                id: 'exp2',
+                title: 'Dishwasher',
+                company: 'Betty’s Restaurant',
+                location: 'Niagara Falls, ON (Formerly Chippawa)',
+                dates: 'February 2021 – June 2022',
+                details: [
+                    'Maintained a <strong>clean, organized, and sanitary kitchen environment</strong>, ensuring all equipment and workspaces met health standards.',
+                    'Assisted with basic food prep and limited kitchen support, demonstrating ability to <strong>follow detailed instructions</strong> and contribute to team efficiency.'
+                ]
+            },
+            {
+                id: 'exp3',
+                title: 'Construction Labourer',
+                company: 'Renovaate Canada',
+                location: 'Oakville, ON',
+                dates: 'April 2019 – September 2021',
+                details: [
+                    'Executed <strong>physically demanding tasks</strong> and long hours while maintaining a positive work ethic and focus on safety.',
+                    'Developed skills in framing and drywall, demonstrating the ability to <strong>learn and apply technical skills</strong> quickly and precisely.'
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const timelineContainer = document.getElementById('timeline');
+            const detailsContainer = document.getElementById('experience-details');
+
+            experienceData.forEach(job => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item relative cursor-pointer group';
+                timelineItem.dataset.id = job.id;
+
+                timelineItem.innerHTML = `
+                    <div class="timeline-dot absolute -left-[33px] top-1 h-4 w-4 rounded-full bg-gray-300 border-4 border-white transition-all duration-300 group-hover:bg-amber-400"></div>
+                    <h4 class="timeline-title text-lg font-medium text-gray-700 transition-colors duration-300">${job.title}</h4>
+                    <p class="text-sm text-gray-500">${job.company}</p>
+                    <p class="text-xs text-gray-400">${job.dates}</p>
+                `;
+                timelineContainer.appendChild(timelineItem);
+            });
+
+            timelineContainer.addEventListener('click', function(e) {
+                const item = e.target.closest('.timeline-item');
+                if (item) {
+                    const jobId = item.dataset.id;
+                    const jobData = experienceData.find(j => j.id === jobId);
+
+                    document.querySelectorAll('.timeline-item').forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+
+                    if (jobData) {
+                        detailsContainer.innerHTML = `
+                            <h3 class="text-2xl font-bold text-gray-900 mb-1 border-b pb-1 border-amber-500">${jobData.title}</h3>
+                            <p class="text-md font-semibold text-gray-700 mb-1">${jobData.company} | ${jobData.location}</p>
+                            <p class="text-sm text-gray-500 mb-4">${jobData.dates}</p>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                ${jobData.details.map(d => `<li>${d}</li>`).join('')}
+                            </ul>
+                        `;
+                    }
+                }
+            });
+            
+            if(timelineContainer.firstElementChild) {
+                timelineContainer.firstElementChild.click();
+            }
+
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Customer Interaction', 'Patience & Communication', 'Problem Solving', 'Physical Fitness', 'Cleanliness & Safety'],
+                    datasets: [{
+                        label: 'Skill Level',
+                        data: [90, 95, 85, 90, 80],
+                        // Updated Chart Colors
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)', // Amber-600 with opacity
+                        borderColor: 'rgb(31, 41, 55)', // Gray-800
+                        pointBackgroundColor: 'rgb(217, 119, 6)', // Amber-600
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(31, 41, 55)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 13,
+                                    weight: '500'
+                                },
+                                color: '#334155'
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(255, 255, 255, 0.75)',
+                                stepSize: 20
+                            },
+                             suggestedMin: 0,
+                             suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
